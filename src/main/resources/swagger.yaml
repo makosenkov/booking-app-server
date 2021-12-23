@@ -1,0 +1,167 @@
+openapi: 3.0.3
+info:
+  title: REST-API приложения smallapp
+  description: REST-API приложения smallapp
+  version: 1.0.0
+tags:
+  - name: room
+    description: Работа номерами
+  - name: booking
+    description: Работа с бронированием
+servers:
+  - url: /api/rest
+paths:
+  /room/find:
+    get:
+      tags:
+        - room
+      description: Получение всех номеров
+      operationId: findAll
+      responses:
+        200:
+          description: Список номеров
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Room'
+  /room/findByDates:
+    get:
+      tags:
+        - room
+      description: Получение всех номеров, доступных для бронирования
+      operationId: findAllByDates
+      parameters:
+        - name: startDate
+          in: query
+          description: Дата заезда
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          description: Дата выезда
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        200:
+          description: Список номеров
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Room'
+  /room/save:
+    put:
+      tags:
+        - room
+      description: Сохранение номера
+      operationId: save
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Room'
+      responses:
+        201:
+          description: Сохранено успешно
+  /room/delete:
+    put:
+      tags:
+        - room
+      description: Удаление номера
+      operationId: deleteById
+      parameters:
+        - name: id
+          in: query
+          description: Идентификатор
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Удалено успешно
+  /room/available:
+    get:
+      tags:
+        - room
+      description: Проверка доступности номера на даты
+      operationId: isAvailable
+      parameters:
+        - name: id
+          in: query
+          description: Идентификатор
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: startDate
+          in: query
+          description: Дата заезда
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          description: Дата выезда
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        200:
+          description: Доступность номера на указанные даты
+          content:
+            application/json:
+              schema:
+                type: boolean
+
+  /booking/save:
+    put:
+      tags:
+        - booking
+      description: Сохранение бронирования
+      operationId: save
+      parameters:
+        - name: id
+          in: query
+          description: Идентификатор номера
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: startDate
+          in: query
+          description: Дата заезда
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          description: Дата выезда
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        201:
+          description: Сохранено успешно
+components:
+  schemas:
+    Room:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+      description: Номер

@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/smalapp_db
+    username: postgres
+    password: postgres
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
